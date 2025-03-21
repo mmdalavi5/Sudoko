@@ -140,10 +140,19 @@ void get_random_sudoku(int table[SIZE][SIZE]) {
 // Prints (and refreshes) the Sudoku grid using clui functions.
 void print_sudoku(int table[SIZE][SIZE]) {
     clear_screen();
+
+    // Get terminal dimensions
+    int rows = get_window_rows();
+    int cols = get_window_cols();
+
+    // Calculate top-left corner for centering
+    int start_row = (rows - SIZE) / 2;
+    int start_col = (cols - (SIZE * 4)) / 2; // 4 spaces per cell for alignment
+
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            cursor_to_pos(i + 1, j * 4 + 1);
-            if (table[i][j] == 0) {
+            cursor_to_pos(start_row + i, start_col + j * 4);
+            if (table[i][j] == 0) { // Empty cells
                 change_color(COLOR_CYAN);
                 printf(" . ");
             } else {
@@ -154,6 +163,7 @@ void print_sudoku(int table[SIZE][SIZE]) {
     }
     reset_color();
 }
+
 
 // Allows navigation with WASD and lets the user change cell values.
 // Press 'q' to quit.
