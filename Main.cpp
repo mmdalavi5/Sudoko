@@ -137,22 +137,14 @@ void get_random_sudoku(int table[SIZE][SIZE]) {
             table[i][j] = sudoku[randomIndex][i][j];
 }
 
-// Prints (and refreshes) the Sudoku grid using clui functions.
-void print_sudoku(int table[SIZE][SIZE]) {
+// Prints the Sudoku grid centered on the terminal.
+// The grid starts at (start_row, start_col) and each cell occupies 4 columns.
+void print_sudoku(int table[SIZE][SIZE], int start_row, int start_col) {
     clear_screen();
-
-    // Get terminal dimensions
-    int rows = get_window_rows();
-    int cols = get_window_cols();
-
-    // Calculate top-left corner for centering
-    int start_row = (rows - SIZE) / 2;
-    int start_col = (cols - (SIZE * 4)) / 2; // 4 spaces per cell for alignment
-
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             cursor_to_pos(start_row + i, start_col + j * 4);
-            if (table[i][j] == 0) { // Empty cells
+            if (table[i][j] == 0) {
                 change_color(COLOR_CYAN);
                 printf(" . ");
             } else {
@@ -164,16 +156,22 @@ void print_sudoku(int table[SIZE][SIZE]) {
     reset_color();
 }
 
-
-// Allows navigation with WASD and lets the user change cell values.
-// Press 'q' to quit.
+// Allows navigation with WASD. The grid is redrawn centered,
+// and the currently selected cell is highlighted in red.
 void play_sudoku(int table[SIZE][SIZE]) {
-    int x = 0, y = 0;
+    int x = 0, y = 0; // starting position at the top-left of the grid
     char ch;
     while (true) {
-        print_sudoku(table);
-        // Highlight the current cell
-        cursor_to_pos(y + 1, x * 4 + 1);
+        // Calculate centering offsets for the grid.
+        int totalRows = get_window_rows();
+        int totalCols = get_window_cols();
+        int start_row = (totalRows - SIZE) / 2;
+        int start_col = (totalCols - (SIZE * 4)) / 2;
+        
+        print_sudoku(table, start_row, start_col);
+
+        // Highlight the current cell.
+        cursor_to_pos(start_row + y, start_col + x * 4);
         change_color(COLOR_RED);
         if (table[y][x] == 0)
             printf(" . ");
@@ -211,7 +209,6 @@ int main() {
     init_clui();
     int table[SIZE][SIZE];
     get_random_sudoku(table);
-    print_sudoku(table);
     play_sudoku(table);
     quit();
     return 0;
