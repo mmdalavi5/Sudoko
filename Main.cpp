@@ -128,7 +128,7 @@ int sudoku[10][SIZE][SIZE] = {
     }
 };
 
-// Selects a random Sudoku puzzle from the array.
+// Selects a random Sudoku puzzle and copies it to table.
 void get_random_sudoku(int table[SIZE][SIZE]) {
     srand((unsigned int)time(nullptr));
     int randomIndex = rand() % 10;
@@ -158,8 +158,9 @@ void print_sudoku(int table[SIZE][SIZE], int start_row, int start_col) {
 
 // Allows navigation with WASD. The grid is redrawn centered,
 // and the currently selected cell is highlighted in red.
+// When the user presses a number key, the value is only changed if the cell is empty.
 void play_sudoku(int table[SIZE][SIZE]) {
-    int x = 0, y = 0; // starting position at the top-left of the grid
+    int x = 0, y = 0; // starting position at the top-left cell
     char ch;
     while (true) {
         // Calculate centering offsets for the grid.
@@ -197,7 +198,9 @@ void play_sudoku(int table[SIZE][SIZE]) {
                 return;
             case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9':
-                table[y][x] = ch - '0';
+                // Only update the cell if it's currently empty.
+                if (table[y][x] == 0)
+                    table[y][x] = ch - '0';
                 break;
             default:
                 break;
