@@ -1,5 +1,5 @@
 # Sudoko
-A console based Sudoku.
+A console based Sudoku game.
 ## Features
 - **Generating random tables of sudoku**
 - **Choosing the difficulty level**
